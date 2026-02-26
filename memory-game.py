@@ -38,8 +38,10 @@ class MemoryGame:
                 button = tk.Button(
                     self.card_grid,
                     bg = card_color,
-                    width=10,
-                    height=5,
+                    width=14,
+                    height=7,
+                    relief="solid",
+                    bd=5,
                     command=lambda row=r, col=c: self.on_button_clicked(row, col)
                     )
                 
@@ -48,10 +50,49 @@ class MemoryGame:
             self.buttons.append(button_row)
 
     def on_button_clicked(self, row, col):
+
+        if len(self.clicked_buttons) == 2:
+            return
+        
         button = self.buttons[row][col]
         color = self.card_values[row][col]
-        button.configure(bg=color)  
 
+        if button in self.clicked_buttons:
+            return
+        
+        # Make it look like its flipping
+        self.flip_cards(button, color)
+        self.clicked_buttons.append(button)
+        if len(self.clicked_buttons) == 2:
+            self.root.after(600, self.check_match)  
+
+    def check_match(self):
+        butn1, butn2 = self.clicked_buttons
+        row1, col1 = butn1.grid_info()["row"], butn1.grid_info()["column"]
+        row2, col2 = butn2.grid_info()["row"], butn2.grid_info()["column"]
+
+        color1 = self.card_values[row1][col1]
+        color2 = self.card_values[row2][col2]
+
+        if color1 == color2:
+            butn1.configure(state="disabled")
+            butn2.configure(state="disabled")
+        else:
+            butn1.configure(bg=card_color, relief="solid")
+            butn2.configure(bg=card_color, relief="solid")
+
+        self.clicked_buttons = []
+
+    def flip_cards(self, button, flipped_color, frame=0):
+        widths = [14, 10, 6, 3, 1, 3, 6, 10, 14]
+        
+        if frame < len(widths):
+            button.configure(width=widths[frame])
+
+            # change color mid flip
+            if frame == len(widths) // 2:
+                button.configure(bg=flipped_color)
+            self.root.after(30, lambda: self.flip_cards(button, flipped_color, frame + 1))
 
 
 
