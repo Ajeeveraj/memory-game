@@ -17,6 +17,11 @@ class MemoryGame:
         self.root.configure(bg=back_color)
         self.buttons = []
         self.clicked_buttons = []
+
+        # Timer label
+        self.timer_label = tk.Label(self.root, text="Time: 60", font=("Arial", 16), bg=back_color, fg="white")
+        self.timer_label.pack(pady=10)
+
         
         # create 16 cards with 8 pairs of colors
         values = colors * 2
@@ -27,6 +32,9 @@ class MemoryGame:
         self.card_grid.pack(expand=True)
 
         self.create_board()
+
+        # start timer
+        self.start_timer()
 
     def create_board(self):
         self.buttons = []
@@ -92,7 +100,37 @@ class MemoryGame:
             # change color mid flip
             if frame == len(widths) // 2:
                 button.configure(bg=flipped_color)
-            self.root.after(30, lambda: self.flip_cards(button, flipped_color, frame + 1))
+            self.root.after(20, lambda: self.flip_cards(button, flipped_color, frame + 1))
+
+
+    # Run the timer
+    def start_timer(self):
+        self.time_left = 60
+        self.update_timer()
+
+    def update_timer(self):
+        self.timer_label.configure(text=f"Time: {self.time_left}")
+        if self.time_left > 0:
+            self.time_left -= 1
+            self.root.after(1000, self.update_timer)
+        else:
+            self.restart_game()
+
+    # restart if time reaches 0
+    def restart_game(self):
+        for widget in self.card_grid.winfo_children():
+            widget.destroy()
+
+        # reset game if time runs out
+        values = colors * 2
+        random.shuffle(values)
+        self.card_values = [values[i:i+4] for i in range(0, 16, 4)]
+        self.clicked_buttons = []
+        self.create_board()
+        self.start_timer()
+
+
+            
 
 
 
