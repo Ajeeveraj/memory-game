@@ -17,12 +17,47 @@ class MemoryGame:
         self.root.configure(bg=back_color)
         self.buttons = []
         self.clicked_buttons = []
+        self.main_menu()
+    
+    # Menu system
+    def main_menu(self):
+        self.difficulty_frame = tk.Frame(self.root, bg=back_color)
+        self.difficulty_frame.pack(expand=True)
+
+        tk.Label(
+            self.difficulty_frame,
+            text="Memory Game",
+            font=("Arial", 28),
+            bg=back_color,
+            fg="white"
+        ).pack(pady=20)
+
+        tk.Button(self.difficulty_frame, text="Easy", font=("Arial", 18), width=12, command=lambda: self.diff_settings("Easy")).pack(pady=10)
+        tk.Button(self.difficulty_frame, text="Medium", font=("Arial", 18), width=12, command=lambda: self.diff_settings("Medium")).pack(pady=10)
+        tk.Button(self.difficulty_frame, text="Hard", font=("Arial", 18), width=12, command=lambda: self.diff_settings("Hard")).pack(pady=10)
+
+    # Difficulty systm
+    def diff_settings(self, difficulty):
+        self.difficulty = difficulty
+        if difficulty == "Easy":
+            self.time_left = 90
+        elif difficulty == "Medium":
+            self.time_left = 60
+        else:
+            self.time_left = 30
+
+        self.difficulty_frame.destroy()
+
+
+
+
+
+        
 
         # Timer label
         self.timer_label = tk.Label(self.root, text="Time: 60", font=("Arial", 16), bg=back_color, fg="white")
         self.timer_label.pack(pady=10)
 
-        
         # create 16 cards with 8 pairs of colors
         values = colors * 2
         random.shuffle(values)
@@ -105,7 +140,6 @@ class MemoryGame:
 
     # Run the timer
     def start_timer(self):
-        self.time_left = 60
         self.update_timer()
 
     def update_timer(self):
