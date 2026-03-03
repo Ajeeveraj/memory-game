@@ -2,6 +2,8 @@ import tkinter as tk
 import random
 
 root = tk.Tk()
+root.attributes("-fullscreen", True)
+root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
 
 # colors
 colors = ["#00FFFF", "#FF00FF", "#FFFF00", "#00FF00", "#FF0000", "#0000FF", "#272d33", "#7A0C7E"]
@@ -49,14 +51,13 @@ class MemoryGame:
         self.difficulty_frame.destroy()
 
 
-
-
-
-        
-
-        # Timer label
+         # Timer label
         self.timer_label = tk.Label(self.root, text="Time: 60", font=("Arial", 16), bg=back_color, fg="white")
         self.timer_label.pack(pady=10)
+
+        # label for winning the game
+        self.win_label = tk.Label(self.root, text="", font=("Arial", 24), bg=back_color, fg="white")
+        self.win_label.pack(pady=10)
 
         # create 16 cards with 8 pairs of colors
         values = colors * 2
@@ -126,6 +127,13 @@ class MemoryGame:
 
         self.clicked_buttons = []
 
+        # Check if all cards are matched
+        all_disabled = all(button["state"] == "disabled" for row in self.buttons for button in row)
+        
+        if all_disabled:
+            self.game_won()
+
+
     def flip_cards(self, button, flipped_color, frame=0):
         widths = [14, 10, 6, 3, 1, 3, 6, 10, 14]
         
@@ -154,6 +162,17 @@ class MemoryGame:
     def restart_game(self):
         if hasattr(self, "timer_id"):
             self.root.after_cancel(self.timer_id)
+
+        self.win_label.configure(text="")
+        if hasattr(self, "play_again_butn"):
+            self.play_again_butn.destroy()
+        if hasattr(self, "back_to_menu_butn"):
+            self.back_to_menu_butn.destroy()
+
+        # reset if play again is clicked
+        self.win_label.configure(text="")
+        if hasattr(self, "play_again_butn"):
+            self.play_again_butn.destroy()
             
         # restart timer based on difficulty
         if self.difficulty == "Easy":
@@ -173,6 +192,42 @@ class MemoryGame:
         self.clicked_buttons = []
         self.create_board()
         self.start_timer()
+
+    # Game won
+    def game_won(self):
+        if hasattr(self, "timer_id"):
+            self.root.after_cancel(self.timer_id)
+
+        self.win_label.configure(text="You Won!")
+
+        play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 16), command=self.restart_game)
+        play_again_butn.pack(pady=10)
+        self.play_again_butn = play_again_butn
+
+        # Back to menu button
+        back_to_menu_butn = tk.Button(self.root, text="Menu", font=("Arial", 16), command=self.back_to_menu)
+        back_to_menu_butn.pack(pady=10)
+        self.back_to_menu_butn = back_to_menu_butn
+
+    # Return back to the main menu if the button is clicked
+    def back_to_menu(self):
+        if hasattr(self, "timer_id"):
+            self.root.after_cancel(self.timer_id)
+
+        self.win_label.configure(text="")
+
+        if hasattr(self, "play_again_butn"):
+            self.play_again_butn.destroy()
+        if hasattr(self, "back_to_menu_but"):
+            self.back_to_menu_butn.destroy()
+
+        for widget in self.card_grid.winfo_children():
+            widget.destroy()
+        self.card_grid.destroy()
+        
+        self.main_menu()
+
+
 
 
 
