@@ -146,12 +146,23 @@ class MemoryGame:
         self.timer_label.configure(text=f"Time: {self.time_left}")
         if self.time_left > 0:
             self.time_left -= 1
-            self.root.after(1000, self.update_timer)
+            self.timer_id = self.root.after(1000, self.update_timer)
         else:
             self.restart_game()
 
     # restart if time reaches 0
     def restart_game(self):
+        if hasattr(self, "timer_id"):
+            self.root.after_cancel(self.timer_id)
+            
+        # restart timer based on difficulty
+        if self.difficulty == "Easy":
+            self.time_left = 90
+        elif self.difficulty == "Medium":
+            self.time_left = 60
+        else:
+            self.time_left = 30
+
         for widget in self.card_grid.winfo_children():
             widget.destroy()
 
@@ -162,6 +173,8 @@ class MemoryGame:
         self.clicked_buttons = []
         self.create_board()
         self.start_timer()
+
+
 
 
             
