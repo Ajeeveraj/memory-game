@@ -29,10 +29,10 @@ class MemoryGame:
         tk.Label(
             self.difficulty_frame,
             text="Memory Game",
-            font=("Arial", 28),
+            font=("Arial", 68),
             bg=back_color,
             fg="white"
-        ).pack(pady=20)
+        ).pack(pady=120)
 
         tk.Button(self.difficulty_frame, text="Easy", font=("Arial", 18), width=12, command=lambda: self.diff_settings("Easy")).pack(pady=10)
         tk.Button(self.difficulty_frame, text="Medium", font=("Arial", 18), width=12, command=lambda: self.diff_settings("Medium")).pack(pady=10)
@@ -57,6 +57,13 @@ class MemoryGame:
             self.timer_label = tk.Label(self.root, text=f"Time: {self.time_left}", font=("Arial", 16), bg=back_color, fg="white")
             self.timer_label.pack(pady=10)
 
+        # Create play again button
+        self.play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 22), command=self.restart_game)
+        self.play_again_butn.pack(pady=20)
+
+        # Create back to menu button
+        self.back_to_menu_butn = tk.Button(self.root, text="Back to Menu", font=("Arial", 22), command=self.back_to_menu)
+        self.back_to_menu_butn.pack(pady=20)
 
 
         # create 16 cards with 8 pairs of colors
@@ -166,16 +173,6 @@ class MemoryGame:
             except Exception:
                 pass
 
-        if hasattr(self, "play_again_butn"):
-            try:
-                self.play_again_butn.destroy()
-            except Exception:
-                pass
-        if hasattr(self, "back_to_menu_butn"):
-            try:
-                self.back_to_menu_butn.destroy()
-            except Exception:
-                pass
         
         if hasattr(self, "win_label") and self.win_label.winfo_exists():
             self.win_label.configure(text="")
@@ -240,12 +237,6 @@ class MemoryGame:
             except Exception:
                 pass
 
-        self.play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 16), command=self.restart_game)
-        self.play_again_butn.pack(pady=10)
-
-        # Back to menu button
-        self.back_to_menu_butn = tk.Button(self.root, text="Menu", font=("Arial", 16), command=self.back_to_menu)
-        self.back_to_menu_butn.pack(pady=10)
 
     # Return back to the main menu if the button is clicked
     def back_to_menu(self): 
@@ -256,16 +247,10 @@ class MemoryGame:
                 pass
 
         if hasattr(self, "play_again_butn"):
-            try: 
-                self.play_again_butn.destroy() 
-            except Exception: 
-                pass
+                self.play_again_butn.pack_forget()
 
         if hasattr(self, "back_to_menu_butn"): 
-            try: 
-                self.back_to_menu_butn.destroy() 
-            except Exception: 
-                pass 
+            self.back_to_menu_butn.pack_forget()
 
         if hasattr(self, "win_label") and self.win_label.winfo_exists(): 
             try: 
