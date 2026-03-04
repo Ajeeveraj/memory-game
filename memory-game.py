@@ -50,14 +50,14 @@ class MemoryGame:
 
         self.difficulty_frame.destroy()
 
+        # Timer label
+        if hasattr(self, "timer_label") and self.timer_label.winfo_exists():
+            self.timer_label.configure(text=f"Time: {self.time_left}")
+        else:
+            self.timer_label = tk.Label(self.root, text=f"Time: {self.time_left}", font=("Arial", 16), bg=back_color, fg="white")
+            self.timer_label.pack(pady=10)
 
-         # Timer label
-        self.timer_label = tk.Label(self.root, text="Time: 60", font=("Arial", 16), bg=back_color, fg="white")
-        self.timer_label.pack(pady=10)
 
-        # label for winning the game
-        self.win_label = tk.Label(self.root, text="", font=("Arial", 24), bg=back_color, fg="white")
-        self.win_label.pack(pady=10)
 
         # create 16 cards with 8 pairs of colors
         values = colors * 2
@@ -161,19 +161,26 @@ class MemoryGame:
     # restart if time reaches 0
     def restart_game(self):
         if hasattr(self, "timer_id"):
-            self.root.after_cancel(self.timer_id)
+            try:
+                self.root.after_cancel(self.timer_id)
+            except Exception:
+                pass
 
-        self.win_label.configure(text="")
         if hasattr(self, "play_again_butn"):
-            self.play_again_butn.destroy()
+            try:
+                self.play_again_butn.destroy()
+            except Exception:
+                pass
         if hasattr(self, "back_to_menu_butn"):
-            self.back_to_menu_butn.destroy()
-
-        # reset if play again is clicked
-        self.win_label.configure(text="")
-        if hasattr(self, "play_again_butn"):
-            self.play_again_butn.destroy()
+            try:
+                self.back_to_menu_butn.destroy()
+            except Exception:
+                pass
+        
+        if hasattr(self, "win_label") and self.win_label.winfo_exists():
+            self.win_label.configure(text="")
             
+         
         # restart timer based on difficulty
         if self.difficulty == "Easy":
             self.time_left = 90
@@ -182,8 +189,22 @@ class MemoryGame:
         else:
             self.time_left = 30
 
-        for widget in self.card_grid.winfo_children():
-            widget.destroy()
+        # Update timer label
+        if hasattr(self, "timer_label") and self.timer_label.winfo_exists():
+            self.timer_label.configure(text=f"Time: {self.time_left}")
+        else:
+            self.timer_label = tk.Label(self.root, text=f"Time: {self.time_left}", font=("Arial", 16), bg=back_color, fg="white")
+
+        # Destroy old cards when creating new board
+        if hasattr(self, "card_grid"):
+            try:
+                self.card_grid.destroy()
+            except Exception:
+                pass
+
+        # Create a new card grid frame
+        self.card_grid = tk.Frame(self.root, bg = back_color)
+        self.card_grid.pack(expand=True)
 
         # reset game if time runs out
         values = colors * 2
@@ -196,34 +217,73 @@ class MemoryGame:
     # Game won
     def game_won(self):
         if hasattr(self, "timer_id"):
-            self.root.after_cancel(self.timer_id)
+            try:
+                self.root.after_cancel(self.timer_id)
+            except Exception:
+                pass
+        
+        if hasattr(self, "card_grid"):
+            try:
+                self.card_grid.destroy()
+            except Exception:
+                pass
+        
+        # Ensure win label is visible
+        if not (hasattr(self, "win_label") and getattr(self, "win_label", None) is not None and self.win_label.winfo_exists()):
+            self.win_label = tk.Label(self.root, text="You won", font=("Arial", 24), bg=back_color, fg="white")
+            self.win_label.pack(pady=10)
+        else:
+            self.win_label.configure(text="You Won!")
+            try:
+                if not self.win_label.winfo_ismapped():
+                    self.win_label.pack(pady=10)
+            except Exception:
+                pass
 
-        self.win_label.configure(text="You Won!")
-
-        play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 16), command=self.restart_game)
-        play_again_butn.pack(pady=10)
-        self.play_again_butn = play_again_butn
+        self.play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 16), command=self.restart_game)
+        self.play_again_butn.pack(pady=10)
 
         # Back to menu button
-        back_to_menu_butn = tk.Button(self.root, text="Menu", font=("Arial", 16), command=self.back_to_menu)
-        back_to_menu_butn.pack(pady=10)
-        self.back_to_menu_butn = back_to_menu_butn
+        self.back_to_menu_butn = tk.Button(self.root, text="Menu", font=("Arial", 16), command=self.back_to_menu)
+        self.back_to_menu_butn.pack(pady=10)
 
     # Return back to the main menu if the button is clicked
-    def back_to_menu(self):
-        if hasattr(self, "timer_id"):
-            self.root.after_cancel(self.timer_id)
-
-        self.win_label.configure(text="")
+    def back_to_menu(self): 
+        if hasattr(self, "timer_id"): 
+            try: 
+                self.root.after_cancel(self.timer_id) 
+            except Exception: 
+                pass
 
         if hasattr(self, "play_again_butn"):
-            self.play_again_butn.destroy()
-        if hasattr(self, "back_to_menu_but"):
-            self.back_to_menu_butn.destroy()
+            try: 
+                self.play_again_butn.destroy() 
+            except Exception: 
+                pass
 
-        for widget in self.card_grid.winfo_children():
-            widget.destroy()
-        self.card_grid.destroy()
+        if hasattr(self, "back_to_menu_butn"): 
+            try: 
+                self.back_to_menu_butn.destroy() 
+            except Exception: 
+                pass 
+
+        if hasattr(self, "win_label") and self.win_label.winfo_exists(): 
+            try: 
+                self.win_label.configure(text="") 
+            except Exception: 
+                pass
+
+        if hasattr(self, "timer_label") and self.timer_label.winfo_exists(): 
+            try: 
+                self.timer_label.destroy() 
+            except Exception: 
+                pass
+
+        if hasattr(self, "card_grid"): 
+            try: 
+                self.card_grid.destroy() 
+            except Exception: 
+                pass 
         
         self.main_menu()
 
