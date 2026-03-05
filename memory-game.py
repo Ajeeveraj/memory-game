@@ -19,6 +19,7 @@ class MemoryGame:
         self.root.configure(bg=back_color)
         self.buttons = []
         self.clicked_buttons = []
+        self.matches = 0
         self.main_menu()
     
     # Menu system
@@ -50,19 +51,32 @@ class MemoryGame:
 
         self.difficulty_frame.destroy()
 
+        # Align all widgets and labels
+        self.top_bar = tk.Frame(self.root, bg=back_color)
+        self.top_bar.pack(fill="x", pady=10)
+
         # Timer label
         if hasattr(self, "timer_label") and self.timer_label.winfo_exists():
             self.timer_label.configure(text=f"Time: {self.time_left}")
+            self.timer_label.pack_forget()
         else:
-            self.timer_label = tk.Label(self.root, text=f"Time: {self.time_left}", font=("Arial", 16), bg=back_color, fg="white")
-            self.timer_label.pack(pady=10)
+            self.timer_label = tk.Label(self.top_bar, text=f"Time: {self.time_left}", font=("Arial", 36), bg=back_color, fg="white")
+            self.timer_label.pack(side="left", padx=20)
+
+        # Match counter Label
+        if hasattr(self, "match_label") and self.match_label.winfo_exists():
+            self.match_label.configure(text=f"Matches: {self.matches} / 8")
+            self.match_label.pack_forget() 
+        else:
+            self.match_label = tk.Label(self.top_bar, text=f"Matches: {self.matches} / 8", font=("Arial", 36), bg=back_color, fg="white")
+            self.match_label.pack(side="right", padx=20)
 
         # Create play again button
-        self.play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 18), command=self.restart_game)
+        self.play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 28), command=self.restart_game)
         self.play_again_butn.pack(pady=14)
 
         # Create back to menu button
-        self.back_to_menu_butn = tk.Button(self.root, text="Back to Menu", font=("Arial", 18), command=self.back_to_menu)
+        self.back_to_menu_butn = tk.Button(self.root, text="Back to Menu", font=("Arial", 28), command=self.back_to_menu)
         self.back_to_menu_butn.pack(pady=14)
 
 
@@ -115,8 +129,9 @@ class MemoryGame:
         self.flip_cards(button, color)
         self.clicked_buttons.append(button)
         if len(self.clicked_buttons) == 2:
-            self.root.after(600, self.check_match)  
+            self.root.after(600, self.check_match)
 
+    # Check for matches
     def check_match(self):
         butn1, butn2 = self.clicked_buttons
         row1, col1 = butn1.grid_info()["row"], butn1.grid_info()["column"]
@@ -128,6 +143,8 @@ class MemoryGame:
         if color1 == color2:
             butn1.configure(state="disabled")
             butn2.configure(state="disabled")
+            self.matches += 1
+            self.match_label.configure(text=f"Matches: {self.matches} / 8")
         else:
             butn1.configure(bg=card_color, relief="solid")
             butn2.configure(bg=card_color, relief="solid")
@@ -150,7 +167,7 @@ class MemoryGame:
             # change color mid flip
             if frame == len(widths) // 2:
                 button.configure(bg=flipped_color)
-            self.root.after(20, lambda: self.flip_cards(button, flipped_color, frame + 1))
+            self.root.after(15, lambda: self.flip_cards(button, flipped_color, frame + 1))
 
 
     # Run the timer
@@ -198,10 +215,23 @@ class MemoryGame:
                 self.card_grid.destroy()
             except Exception:
                 pass
+        
+        # Reset match counter
+        self.matches = 0
+
+        if hasattr(self, "Match_label") and self.match_label.winfo_exists():
+            self.top_bar.destroy()
+
+        self.top_bar = tk.Frame(self.root, bg=back_color)
+        self.top_bar.pack(fill="x", pady=10)
 
         # Create a new card grid frame
         self.card_grid = tk.Frame(self.root, bg = back_color)
         self.card_grid.pack(expand=True)
+
+        # reset match counter
+        self.matches = 0
+        self.match_label.configure(text=f"Matches: 0/8")
 
         # reset game if time runs out
         values = colors * 2
