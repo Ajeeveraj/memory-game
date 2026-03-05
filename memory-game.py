@@ -7,7 +7,7 @@ root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
 
 # colors
 colors = ["#00FFFF", "#FF00FF", "#FFFF00", "#00FF00", "#FF0000", "#0000FF", "#272d33", "#7A0C7E"]
-back_color = "#272d33"
+back_color = "#0f1115"
 card_color = "#382E2E"
 
 class MemoryGame:
@@ -58,12 +58,12 @@ class MemoryGame:
             self.timer_label.pack(pady=10)
 
         # Create play again button
-        self.play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 22), command=self.restart_game)
-        self.play_again_butn.pack(pady=20)
+        self.play_again_butn = tk.Button(self.root, text="Play Again", font=("Arial", 18), command=self.restart_game)
+        self.play_again_butn.pack(pady=14)
 
         # Create back to menu button
-        self.back_to_menu_butn = tk.Button(self.root, text="Back to Menu", font=("Arial", 22), command=self.back_to_menu)
-        self.back_to_menu_butn.pack(pady=20)
+        self.back_to_menu_butn = tk.Button(self.root, text="Back to Menu", font=("Arial", 18), command=self.back_to_menu)
+        self.back_to_menu_butn.pack(pady=14)
 
 
         # create 16 cards with 8 pairs of colors
@@ -227,8 +227,8 @@ class MemoryGame:
         
         # Ensure win label is visible
         if not (hasattr(self, "win_label") and getattr(self, "win_label", None) is not None and self.win_label.winfo_exists()):
-            self.win_label = tk.Label(self.root, text="You won", font=("Arial", 24), bg=back_color, fg="white")
-            self.win_label.pack(pady=10)
+            self.win_label = tk.Label(self.root, text="You won", font=("Arial", 54), bg=back_color, fg="white")
+            self.win_label.pack(pady=20)
         else:
             self.win_label.configure(text="You Won!")
             try:
