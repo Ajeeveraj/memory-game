@@ -41,11 +41,11 @@ class MemoryGame:
             fg="white"
         ).pack(pady=120)
 
-        tk.Button(self.difficulty_frame, text="Easy", font=("Arial", 18), width=12,command=lambda: self.diff_settings("Easy")).pack(pady=10)
+        tk.Button(self.difficulty_frame, text="Easy", font=("Arial", 20), width=20, bg="green", fg="white", command=lambda: self.diff_settings("Easy")).pack(pady=20)
 
-        tk.Button(self.difficulty_frame, text="Medium", font=("Arial", 18), width=12,command=lambda: self.diff_settings("Medium")).pack(pady=10)
+        tk.Button(self.difficulty_frame, text="Medium", font=("Arial", 20), width=20, bg="yellow", fg="black", command=lambda: self.diff_settings("Medium")).pack(pady=20)
 
-        tk.Button(self.difficulty_frame, text="Hard", font=("Arial", 18), width=12,command=lambda: self.diff_settings("Hard")).pack(pady=10)
+        tk.Button(self.difficulty_frame, text="Hard", font=("Arial", 20), width=20, bg="red", fg="white", command=lambda: self.diff_settings("Hard")).pack(pady=20)
 
     # Difficulty system
     def diff_settings(self, difficulty):
@@ -108,7 +108,7 @@ class MemoryGame:
             except Exception:
                 pass
 
-        self.timer_label = tk.Label(self.right_col, text=f"Time: {self.time_left}", font=("Arial", 28), bg=back_color, fg="white")
+        self.timer_label = tk.Label(self.right_col, text=f"Time: {self.time_left}", font=("Arial", 28), bg=back_color, fg="yellow")
         self.timer_label.pack(anchor="ne", pady=(0,8))
 
         self.match_label = tk.Label(self.right_col, text=f"Matches: {self.matches} / 8", font=("Arial", 28), bg=back_color, fg="white")
