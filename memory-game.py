@@ -36,17 +36,16 @@ class MemoryGame:
         tk.Label(
             self.difficulty_frame,
             text="Memory Game",
-            font=("Arial", 68),
+            font=("Oswald", 68, "italic bold"),
             bg=back_color,
             fg="white"
         ).pack(pady=120)
 
-        tk.Button(self.difficulty_frame, text="Easy", font=("Arial", 20), width=20, bg="green", fg="white", command=lambda: self.diff_settings("Easy")).pack(pady=20)
+        tk.Button(self.difficulty_frame, text="Easy", font=("Arial", 28, "bold"), width=20, bg="darkgreen",  fg="white", command=lambda: self.diff_settings("Easy")).pack(pady=20)
 
-        tk.Button(self.difficulty_frame, text="Medium", font=("Arial", 20), width=20, bg="yellow", fg="black", command=lambda: self.diff_settings("Medium")).pack(pady=20)
+        tk.Button(self.difficulty_frame, text="Medium", font=("Arial", 28, "bold"), width=20, bg="#F59E0B", fg="white", command=lambda: self.diff_settings("Medium")).pack(pady=20)
 
-        tk.Button(self.difficulty_frame, text="Hard", font=("Arial", 20), width=20, bg="red", fg="white", command=lambda: self.diff_settings("Hard")).pack(pady=20)
-
+        tk.Button(self.difficulty_frame, text="Hard", font=("Arial", 28, "bold"), width=20, bg="crimson", fg="white", command=lambda: self.diff_settings("Hard")).pack(pady=20)
     # Difficulty system
     def diff_settings(self, difficulty):
         # set difficulty and time
@@ -115,7 +114,7 @@ class MemoryGame:
         self.match_label.pack(anchor="ne", pady=(0,12))
 
         # Back to Menu button on the right (below labels)
-        self.back_to_menu_butn = tk.Button(self.right_col, text="Back to Menu", font=("Arial", 18), command=self.back_to_menu)
+        self.back_to_menu_butn = tk.Button(self.right_col, text="Back to Menu", font=("Arial", 24), bg="#0284C7", fg="white", command=self.back_to_menu)
         self.back_to_menu_butn.pack(anchor="ne")
 
         # Play Again button on the left (top)
@@ -126,7 +125,7 @@ class MemoryGame:
             except Exception:
                 pass
 
-        self.play_again_butn = tk.Button(self.left_col, text="Play Again", font=("Arial", 18), command=self.restart_game)
+        self.play_again_butn = tk.Button(self.left_col, text="Play Again", font=("Arial", 24), bg="#FF7A18", fg="white", command=self.restart_game)
         self.play_again_butn.pack(anchor="nw")
 
         
@@ -152,14 +151,16 @@ class MemoryGame:
     def create_board(self):
         self.buttons = []
 
+        # Create the cards
+
         for r in range(4):
             button_row = []
             for c in range(4):
                 button = tk.Button(
                     self.card_grid,
                     bg = card_color,
-                    width=12,
-                    height=6,
+                    width=18,
+                    height=9,
                     relief="solid",
                     bd=5,
                     command=lambda row=r, col=c: self.on_button_clicked(row, col)
@@ -215,7 +216,7 @@ class MemoryGame:
 
 
     def flip_cards(self, button, flipped_color, frame=0):
-        widths = [12, 9, 6, 3, 1, 3, 6, 9, 12]
+        widths = [18, 14, 10, 6, 1, 6, 10, 14, 18]
         
         if frame < len(widths):
             button.configure(width=widths[frame])
@@ -298,6 +299,10 @@ class MemoryGame:
                 self.root.after_cancel(self.timer_id)
             except Exception:
                 pass
+
+        # Reset match scores
+        self.matches = 0
+
         
         if hasattr(self, "card_grid"):
             try:
@@ -325,6 +330,10 @@ class MemoryGame:
                 self.root.after_cancel(self.timer_id) 
             except Exception: 
                 pass
+
+
+        self.matches = 0
+        self.clicked_buttons = []
 
         self.clear_screen()
         self.main_menu()
