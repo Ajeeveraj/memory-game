@@ -7,7 +7,7 @@ root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
 
 # colors
 colors = ["#00FFFF", "#FF00FF", "#FFFF00", "#00FF00", "#FF0000", "#0000FF", "#272d33", "#7A0C7E"]
-back_color = "#0f1115"
+back_color = "#0F0F0F"
 card_color = "#382E2E"
 
 class MemoryGame:
@@ -253,7 +253,7 @@ class MemoryGame:
         # clear win label if it exists
         if hasattr(self, "win_label") and getattr(self, "win_label", None) is not None and self.win_label.winfo_exists():
             try:
-                self.win_label.configure(text="")
+                self.win_label.destroy()
             except Exception:
                 pass
 
@@ -303,7 +303,6 @@ class MemoryGame:
         # Reset match scores
         self.matches = 0
 
-        
         if hasattr(self, "card_grid"):
             try:
                 self.card_grid.destroy()
@@ -311,16 +310,11 @@ class MemoryGame:
                 pass
         
         # Ensure win label is visible
-        if not (hasattr(self, "win_label") and getattr(self, "win_label", None) is not None and self.win_label.winfo_exists()):
-            self.win_label = tk.Label(self.root, text="You won", font=("Arial", 54), bg=back_color, fg="white")
-            self.win_label.pack(pady=20)
-        else:
-            self.win_label.configure(text="You Won!")
-            try:
-                if not self.win_label.winfo_ismapped():
-                    self.win_label.pack(pady=10)
-            except Exception:
-                pass
+        win_frame = tk.Frame(self.center_col, bg=back_color)
+        win_frame.place(relx=0.5, rely=0.5, anchor= "center")
+
+        self.win_label = tk.Label(win_frame, text="You Won!", font=("Arial", 78, "bold"), bg=back_color, fg="white")
+        self.win_label.pack()
 
 
     # return to menu
