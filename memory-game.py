@@ -20,6 +20,8 @@ class MemoryGame:
         self.buttons = []
         self.clicked_buttons = []
         self.matches = 0
+        self.best_time = None
+        self.total_time = None
         self.main_menu()
 
     def clear_screen(self):
@@ -46,6 +48,7 @@ class MemoryGame:
         tk.Button(self.difficulty_frame, text="Medium", font=("Arial", 28, "bold"), width=20, bg="#F59E0B", fg="white", command=lambda: self.diff_settings("Medium")).pack(pady=20)
 
         tk.Button(self.difficulty_frame, text="Hard", font=("Arial", 28, "bold"), width=20, bg="crimson", fg="white", command=lambda: self.diff_settings("Hard")).pack(pady=20)
+
     # Difficulty system
     def diff_settings(self, difficulty):
         # set difficulty and time
@@ -56,6 +59,8 @@ class MemoryGame:
             self.time_left = 60
         else:
             self.time_left = 30
+
+        self.total_time = self.time_left # Track starting time
 
         # remove menu frame
         try:
@@ -257,6 +262,12 @@ class MemoryGame:
             except Exception:
                 pass
 
+        if hasattr(self, "best_time_label") and getattr(self, "best_time_label", None) is not None and self.best_time_label.winfo_exists():
+            try:
+                self.best_time_label.destroy()
+            except Exception:
+                pass
+
         # reset timer based on difficulty
         if self.difficulty == "Easy":
             self.time_left = 90
@@ -264,6 +275,8 @@ class MemoryGame:
             self.time_left = 60
         else:
             self.time_left = 30
+
+        self.total_time = self.time_left
 
         # update existing labels (do NOT destroy top_bar or content columns)
         if hasattr(self, "timer_label") and self.timer_label.winfo_exists():
@@ -300,6 +313,18 @@ class MemoryGame:
             except Exception:
                 pass
 
+        # Check how long the game took
+        if self.total_time is not None:
+            time_taken = self.total_time - self.time_left
+        else:
+            time_taken = 0
+
+        # Update best time
+        is_new_record = False
+        if self.best_time is None or time_taken < self.best_time:
+            self.best_time = time_taken
+            is_new_record = True
+
         # Reset match scores
         self.matches = 0
 
@@ -315,6 +340,15 @@ class MemoryGame:
 
         self.win_label = tk.Label(win_frame, text="You Won!", font=("Arial", 78, "bold"), bg=back_color, fg="white")
         self.win_label.pack()
+
+        # Best time label
+        if self.best_time is not None:
+            best_text = f"Best Time: {self.best_time} seconds"
+            if is_new_record:
+                best_text += " (New Record!)"
+        
+            self.best_time_label = tk.Label(self.center_col, text=best_text, font=("Arial", 28, "bold"), bg=back_color, fg="yellow")
+            self.best_time_label.place(relx=0.5, rely=0.7, anchor="center")
 
 
     # return to menu
