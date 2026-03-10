@@ -14,7 +14,6 @@ class MemoryGame:
     def __init__ (self, root):
         self.root = root
         self.root.title("Memory Game")
-        self.root.geometry("720x720")
         self.root.minsize(600,600)
         self.root.configure(bg=back_color)
         self.buttons = []
@@ -167,7 +166,7 @@ class MemoryGame:
                     width=18,
                     height=9,
                     relief="solid",
-                    bd=5,
+                    bd=7,
                     command=lambda row=r, col=c: self.on_button_clicked(row, col)
                     )
                 
