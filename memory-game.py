@@ -23,6 +23,7 @@ class MemoryGame:
         self.total_time = None
         self.main_menu()
 
+    # Helper method to clear screen for menu/play again/win_label
     def clear_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -37,16 +38,16 @@ class MemoryGame:
         tk.Label(
             self.difficulty_frame,
             text="Memory Game",
-            font=("Oswald", 68, "italic bold"),
+            font=("Poppins", 72, "bold"),
             bg=back_color,
             fg="white"
-        ).pack(pady=120)
+        ).pack(pady=90)
 
-        tk.Button(self.difficulty_frame, text="Easy", font=("Arial", 28, "bold"), width=20, bg="darkgreen",  fg="white", command=lambda: self.diff_settings("Easy")).pack(pady=20)
+        tk.Button(self.difficulty_frame, text="Easy", font=("Poppins", 28, "bold"), width=20, bg="#047857",  fg="white", command=lambda: self.diff_settings("Easy")).pack(pady=20)
 
-        tk.Button(self.difficulty_frame, text="Medium", font=("Arial", 28, "bold"), width=20, bg="#F59E0B", fg="white", command=lambda: self.diff_settings("Medium")).pack(pady=20)
+        tk.Button(self.difficulty_frame, text="Medium", font=("Poppins", 28, "bold"), width=20, bg="#FF7A18", fg="white", command=lambda: self.diff_settings("Medium")).pack(pady=20)
 
-        tk.Button(self.difficulty_frame, text="Hard", font=("Arial", 28, "bold"), width=20, bg="crimson", fg="white", command=lambda: self.diff_settings("Hard")).pack(pady=20)
+        tk.Button(self.difficulty_frame, text="Hard", font=("Poppins", 28, "bold"), width=20, bg="#DC2626", fg="white", command=lambda: self.diff_settings("Hard")).pack(pady=20)
 
     # Difficulty system
     def diff_settings(self, difficulty):
@@ -59,7 +60,7 @@ class MemoryGame:
         else:
             self.time_left = 30
 
-        self.total_time = self.time_left # Track starting time
+        self.total_time = self.time_left # Track starting time to check highscore
 
         # remove menu frame
         try:
@@ -67,34 +68,37 @@ class MemoryGame:
         except Exception:
             pass
 
-        # Top bar
+        # remove Top bar if it already exists
         if hasattr(self, "top_bar") and getattr(self, "top_bar", None) is not None and self.top_bar.winfo_exists():
             try:
                 self.top_bar.destroy()
             except Exception:
                 pass
+
+        # Create the top bar
         self.top_bar = tk.Frame(self.root, bg=back_color)
         self.top_bar.pack(fill="x", pady=(8,4))
 
-        # Create a main content area with three columns:
-        # left: Play Again, center: card grid, right: timer/match/back
+        # delete content if already exists
         if hasattr(self, "content") and getattr(self, "content", None) is not None and self.content.winfo_exists():
             try:
                 self.content.destroy()
             except Exception:
                 pass
+        
+        # Create content frame(left,center, and right)
         self.content = tk.Frame(self.root, bg=back_color)
         self.content.pack(expand=True, fill="both")
 
-        # Left column (Play Again)
+        # Left column
         self.left_col = tk.Frame(self.content, bg=back_color)
         self.left_col.pack(side="left", fill="y", padx=(20,10), pady=10)
 
-        # Center column (card grid container)
+        # Center column (card grid)
         self.center_col = tk.Frame(self.content, bg=back_color)
         self.center_col.pack(side="left", expand=True, fill="both", padx=10, pady=10)
 
-        # Right column (timer, match counter, back to menu)
+        # Right column
         self.right_col = tk.Frame(self.content, bg=back_color)
         self.right_col.pack(side="right", fill="y", padx=(10,20), pady=10)
 
@@ -111,25 +115,24 @@ class MemoryGame:
             except Exception:
                 pass
 
-        self.timer_label = tk.Label(self.right_col, text=f"Time: {self.time_left}", font=("Arial", 28), bg=back_color, fg="yellow")
+        self.timer_label = tk.Label(self.right_col, text=f"Time: {self.time_left}", font=("Montserrat", 28), bg=back_color, fg="yellow")
         self.timer_label.pack(anchor="ne", pady=(0,8))
 
-        self.match_label = tk.Label(self.right_col, text=f"Matches: {self.matches} / 8", font=("Arial", 28), bg=back_color, fg="white")
+        self.match_label = tk.Label(self.right_col, text=f"Matches: {self.matches} / 8", font=("Montserrat", 28), bg=back_color, fg="white")
         self.match_label.pack(anchor="ne", pady=(0,12))
 
         # Back to Menu button on the right (below labels)
-        self.back_to_menu_butn = tk.Button(self.right_col, text="Back to Menu", font=("Arial", 24), bg="#0284C7", fg="white", command=self.back_to_menu)
+        self.back_to_menu_butn = tk.Button(self.right_col, text="Back to Menu", font=("Poppins", 24,), bg="#0284C7", fg="white", command=self.back_to_menu)
         self.back_to_menu_butn.pack(anchor="ne")
 
-        # Play Again button on the left (top)
-        # Destroy old if exists
+        # Destroy old play gaian button if exists
         if hasattr(self, "play_again_butn") and getattr(self, "play_again_butn", None) is not None and self.play_again_butn.winfo_exists():
             try:
                 self.play_again_butn.destroy()
             except Exception:
                 pass
 
-        self.play_again_butn = tk.Button(self.left_col, text="Play Again", font=("Arial", 24), bg="#FF7A18", fg="white", command=self.restart_game)
+        self.play_again_butn = tk.Button(self.left_col, text="Play Again", font=("Poppins", 24), bg="#FF7A18", fg="white", command=self.restart_game)
         self.play_again_butn.pack(anchor="nw")
 
         
@@ -166,7 +169,7 @@ class MemoryGame:
                     width=18,
                     height=9,
                     relief="solid",
-                    bd=7,
+                    bd=4,
                     command=lambda row=r, col=c: self.on_button_clicked(row, col)
                     )
                 
@@ -333,10 +336,11 @@ class MemoryGame:
             except Exception:
                 pass
         
-        # Ensure win label is visible
+        # Ensure win label is centered
         win_frame = tk.Frame(self.center_col, bg=back_color)
         win_frame.place(relx=0.5, rely=0.5, anchor= "center")
 
+        # Create win label
         self.win_label = tk.Label(win_frame, text="You Won!", font=("Arial", 78, "bold"), bg=back_color, fg="white")
         self.win_label.pack()
 
@@ -357,7 +361,6 @@ class MemoryGame:
                 self.root.after_cancel(self.timer_id) 
             except Exception: 
                 pass
-
 
         self.matches = 0
         self.clicked_buttons = []
