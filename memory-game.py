@@ -6,7 +6,16 @@ root.attributes("-fullscreen", True)
 root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
 
 # colors
-colors = ["#00FFFF", "#FF00FF", "#FFFF00", "#00FF00", "#FF0000", "#0000FF", "#272d33", "#7A0C7E"]
+colors = [
+"#FF3B3B",  # strong red
+"#FFD60A",  # yellow
+"#32D74B",  # vivid green
+"#0A84FF",  # blue
+"#BF5AF2",  # purple
+"#FF2D8D",  # hot pink
+"#00D1B2",  # teal
+"#FF8C42"   # orange
+]
 back_color = "#0F0F0F"
 card_color = "#382E2E"
 
