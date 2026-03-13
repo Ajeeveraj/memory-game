@@ -7,14 +7,14 @@ root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
 
 # colors
 colors = [
-"#FF3B3B",  # strong red
-"#FFD60A",  # yellow
-"#32D74B",  # vivid green
-"#0A84FF",  # blue
-"#BF5AF2",  # purple
-"#FF2D8D",  # hot pink
-"#00D1B2",  # teal
-"#FF8C42"   # orange
+"#E6194B",  # red
+"#3CB44B",  # green
+"#4363D8",  # blue
+"#F58231",  # orange
+"#911EB4",  # purple
+"#46F0F0",  # cyan
+"#F032E6",  # magenta
+"#BCF60C"   # lime
 ]
 back_color = "#0F0F0F"
 card_color = "#382E2E"
@@ -31,6 +31,11 @@ class MemoryGame:
         self.best_time = None
         self.total_time = None
         self.main_menu()
+
+    # Hover effect
+    def add_hover(self, button, hover_color, original_color):
+        button.bind("<Enter>", lambda e: button.configure(bg=hover_color))
+        button.bind("<Leave>", lambda e: button.configure(bg=original_color))
 
     # Helper method to clear screen for menu/play again/win_label
     def clear_screen(self):
@@ -52,11 +57,17 @@ class MemoryGame:
             fg="white"
         ).pack(pady=90)
 
-        tk.Button(self.difficulty_frame, text="Easy", font=("Poppins", 28, "bold"), width=20, bg="#047857",  fg="white", command=lambda: self.diff_settings("Easy")).pack(pady=20)
+        easy_butn = tk.Button(self.difficulty_frame, text="Easy", font=("Poppins", 28, "bold"), width=20, bg="#28A745", fg="white", command=lambda: self.diff_settings("Easy"))
+        easy_butn.pack(pady=20)
+        self.add_hover(easy_butn, "#1E7E34", "#28A745")
 
-        tk.Button(self.difficulty_frame, text="Medium", font=("Poppins", 28, "bold"), width=20, bg="#FF7A18", fg="white", command=lambda: self.diff_settings("Medium")).pack(pady=20)
+        med_butn = tk.Button(self.difficulty_frame, text="Medium", font=("Poppins", 28, "bold"), width=20, bg="#FFC107", fg="white", command=lambda: self.diff_settings("Medium"))
+        med_butn.pack(pady=20)
+        self.add_hover(med_butn, "#E0A800", "#FFC107")
 
-        tk.Button(self.difficulty_frame, text="Hard", font=("Poppins", 28, "bold"), width=20, bg="#DC2626", fg="white", command=lambda: self.diff_settings("Hard")).pack(pady=20)
+        hard_butn = tk.Button(self.difficulty_frame, text="Hard", font=("Poppins", 28, "bold"), width=20, bg="#DC3545", fg="white", command=lambda: self.diff_settings("Hard"))
+        hard_butn.pack(pady=20)
+        self.add_hover(hard_butn, "#C82333", "#DC3545")
 
     # Difficulty system
     def diff_settings(self, difficulty):
@@ -133,6 +144,7 @@ class MemoryGame:
         # Back to Menu button on the right (below labels)
         self.back_to_menu_butn = tk.Button(self.right_col, text="Back to Menu", font=("Poppins", 24,), bg="#0284C7", fg="white", command=self.back_to_menu)
         self.back_to_menu_butn.pack(anchor="ne")
+        self.add_hover(self.back_to_menu_butn, "#0275B1", "#0284C7")
 
         # Destroy old play gaian button if exists
         if hasattr(self, "play_again_butn") and getattr(self, "play_again_butn", None) is not None and self.play_again_butn.winfo_exists():
@@ -143,6 +155,7 @@ class MemoryGame:
 
         self.play_again_butn = tk.Button(self.left_col, text="Play Again", font=("Poppins", 24), bg="#FF7A18", fg="white", command=self.restart_game)
         self.play_again_butn.pack(anchor="nw")
+        self.add_hover(self.play_again_butn, "#FF6A00", "#FF7A18")
 
         
         if hasattr(self, "card_grid") and getattr(self, "card_grid", None) is not None and self.card_grid.winfo_exists():
@@ -344,6 +357,12 @@ class MemoryGame:
                 self.card_grid.destroy()
             except Exception:
                 pass
+
+        if hasattr(self, "timer_label") and self.timer_label.winfo_exists():
+            try:
+                self.timer_label.destroy()
+            except Exception:
+                pass
         
         # Ensure win label is centered
         win_frame = tk.Frame(self.center_col, bg=back_color)
@@ -379,8 +398,4 @@ class MemoryGame:
 
 MemoryGame(root)
 root.mainloop()
-
-
-
-
-                     
+               
