@@ -30,6 +30,7 @@ class MemoryGame:
         self.matches = 0
         self.best_time = None
         self.total_time = None
+        self.preview = False
         self.main_menu()
 
     # Hover effect
@@ -55,7 +56,7 @@ class MemoryGame:
             font=("Poppins", 72, "bold"),
             bg=back_color,
             fg="white"
-        ).pack(pady=90)
+        ).pack(pady=120)
 
         easy_butn = tk.Button(self.difficulty_frame, text="Easy", font=("Poppins", 28, "bold"), width=20, bg="#28A745", fg="white", command=lambda: self.diff_settings("Easy"))
         easy_butn.pack(pady=20)
@@ -174,6 +175,9 @@ class MemoryGame:
 
         self.create_board()
 
+        if self.difficulty in ("Easy", "Medium"):
+            self.preview_board()
+
         # start timer
         self.start_timer()
 
@@ -201,20 +205,48 @@ class MemoryGame:
 
     def on_button_clicked(self, row, col):
 
+        # Prevent clickin cards during preview
+        if self.preview:
+            return
+
         if len(self.clicked_buttons) == 2:
             return
         
         button = self.buttons[row][col]
         color = self.card_values[row][col]
-
-        if button in self.clicked_buttons:
-            return
         
+        # Prevent clicking same card to get a match
+        if len(self.clicked_buttons) == 1:
+            if self.clicked_buttons[0] is button:
+                return
+            
+
         # Make it look like its flipping
         self.flip_cards(button, color)
         self.clicked_buttons.append(button)
         if len(self.clicked_buttons) == 2:
             self.root.after(600, self.check_match)
+
+    # Preview for only easy and medium difficulties
+    def preview_board(self):
+        self.preview = True
+
+        for r in range(4):
+            for c in range(4):
+                button = self.buttons[r][c]
+                color = self.card_values[r][c]
+                button.configure(bg=color)
+            
+        self.root.after(800, self.end_preview)
+
+    def end_preview(self):
+        for r in range(4):
+            for c in range(4):
+                button = self.buttons[r][c]
+                button.configure(bg=card_color)
+
+        self.preview = False
+
 
     # Check for matches
     def check_match(self):
@@ -327,6 +359,11 @@ class MemoryGame:
         self.clicked_buttons = []
 
         self.create_board()
+        
+        # Show the preview again if click play again
+        if self.difficulty in ("Easy", "Medium"):
+            self.preview_board()
+
         self.start_timer()
 
     # Game won
