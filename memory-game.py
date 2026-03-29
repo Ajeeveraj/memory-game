@@ -38,7 +38,7 @@ class MemoryGame:
         button.bind("<Enter>", lambda e: button.configure(bg=hover_color))
         button.bind("<Leave>", lambda e: button.configure(bg=original_color))
 
-    # Helper method to clear screen for menu/play again/win_label
+    # Helper method to clear screen 
     def clear_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -142,7 +142,7 @@ class MemoryGame:
         self.match_label = tk.Label(self.right_col, text=f"Matches: {self.matches} / 8", font=("Montserrat", 28), bg=back_color, fg="white")
         self.match_label.pack(anchor="ne", pady=(0,12))
 
-        # Back to Menu button on the right (below labels)
+        # Back to Menu button
         self.back_to_menu_butn = tk.Button(self.right_col, text="Back to Menu", font=("Poppins", 24,), bg="#0284C7", fg="white", command=self.back_to_menu)
         self.back_to_menu_butn.pack(anchor="ne")
         self.add_hover(self.back_to_menu_butn, "#0275B1", "#0284C7")
@@ -168,7 +168,7 @@ class MemoryGame:
         # center the grid
         self.card_grid.place(relx=0.5, rely=0.5, anchor="center")
 
-        # create 16 cards with 8 pairs of colors
+        # create 4x4 grid of pairs
         values = colors * 2
         random.shuffle(values)
         self.card_values = [values[i:i+4] for i in range(0, 16, 4)]
@@ -275,7 +275,7 @@ class MemoryGame:
         if all_disabled:
             self.game_won()
 
-
+    # Flip animation
     def flip_cards(self, button, flipped_color, frame=0):
         widths = [18, 14, 10, 6, 1, 6, 10, 14, 18]
         
@@ -334,7 +334,7 @@ class MemoryGame:
 
         self.total_time = self.time_left
 
-        # update existing labels (do NOT destroy top_bar or content columns)
+        # update labels
         if hasattr(self, "timer_label") and self.timer_label.winfo_exists():
             self.timer_label.configure(text=f"Time: {self.time_left}")
 
